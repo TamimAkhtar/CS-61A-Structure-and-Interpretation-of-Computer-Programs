@@ -1,7 +1,0 @@
-#lang simply-scheme
-
-; applies an arbitrary procedure given as an argument to each word of an argument sentence
-
-(define (every fn sent)
-  (if (empty? sent) '()
-      (se (fn (first sent)) (every fn (bf sent)))))
