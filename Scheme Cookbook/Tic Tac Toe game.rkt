@@ -1,5 +1,15 @@
 #lang simply-scheme
 
+(define (Tic-Tac-Toe me board_pos)
+  (cond((already-tied? me board_pos))
+       ((already-won? me board_pos))
+       ((can-i-win? me board_pos))
+       ((can-opponent-win? me board_pos))
+       ((can-i-fork? me board_pos))
+       ((can-i-offend? me board_pos))
+       (else (best-free-square me board_pos))))
+
+
 ;representing board position as a word
 ;(define board_pos '__o_xox_x)
 
@@ -100,7 +110,69 @@
 (define (can-i-fork? me board_pos)
   (if (empty? (pivot-numbers me board_pos)) #f
       (first (pivot-numbers me board_pos))))
-              
+
+
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;Taking the offensive
+
+; takes my symbol and board_pos and returns in which square I should advance
+(define (can-i-offend? me board_pos)
+  (best-move (keep (lambda (triplet) (fork-check-on-triplet-predicate me triplet)) (triplet_combinations board_pos))
+             me
+             board_pos))
+
+
+;Takes all my fork triplets now (my-fork-triplets), considers just the first triplet of those fork triplets
+(define (best-move my-fork-triplets me board_pos)
+  (if (empty? my-fork-triplets)
+      #f
+      (best-square (first my-fork-triplets) me board_pos)))
+
+
+; Here I take one of my fork triplet only like 36o for example with my symbol and the board position
+(define (best-square my-fork-triplet me board_pos)
+  (best-square-helper (pivot-numbers (opponent me) board_pos)
+		      (keep number? my-fork-triplet)))
+
+; I take the opponent pivots and one of my fork triplets(only the numbers from it)
+(define (best-square-helper opponent-pivots pair)
+  (if (member? (first pair) opponent-pivots)
+      (first pair)
+      (last pair)))
+
+
+;----------------------------------------------------------------------------------------------------------------------------------------------------------------
+;best free square if all else fails
+
+(define (best-free-square me board_pos)
+  (first-choice (accumulate word (triplet_combinations board_pos))
+		'(5 1 3 7 9 2 4 6 8)))
+
+(define (first-choice possibilities preferences)
+  (first (keep (lambda (square) (member? square possibilities))
+	       preferences)))
+
+;-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+;already-won?
+
+(define (already-won? me board_pos)
+  (cond((member? (word me me me) (triplet_combinations board_pos)) (display "YAYYYY I won, LOSER "))
+       ((member? (word (opponent me) (opponent me) (opponent me)) (triplet_combinations board_pos)) (display "I LOST :( "))
+       (else #f)))
+
+;-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+;already tied
+
+(define (already-tied? me board_pos)
+  (cond((can-i-win? me board_pos))
+       ((can-opponent-win? me board_pos))
+       ((equal? (count(keep draw-identifier? board_pos)) 1)(display "GAME TIED, BUT YOU'RE STILL A LOSER"))
+       ((empty? (keep number? (accumulate word (triplet_combinations board_pos)))) (display "GAME TIED, BUT YOU'RE STILL A LOSER"))
+       (else #f)))
+
+(define (draw-identifier? wd)
+  (member? '_ wd))
   
 
 
