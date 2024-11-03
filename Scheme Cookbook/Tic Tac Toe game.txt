@@ -97,3 +97,76 @@ can-i-fork?: returns false if there are no pivot numbers and returns the first p
 
 
 
+
+
+
+Taking the offensive:
+
+Now it would make sense to block the creation of a fork by the opponent. But what if the opponent has 2 potential forks? It is too late to do anything now.
+
+Instead, we can try to get two in a row in this move so the opponent will be forced to block me instead of making a fork. However we dont want to accidently force the opponent into making a fork as well.
+
+Consider:
+
+   x | o | _
+   _ | x | _
+   _ | _ | o
+
+I am o and I cant win, the opponent also cant win in the next move and I cant fork as well. So I need my 4th offensive strategy here.
+
+so I am o and I can play in any of the squares 3, 6, 7 and 8 to set up myself for 369 or 789. I also know that x's pivots are 4 and 7 and I cant block them both in one move. So what if I played a move so that x will have to block me instead of setting a fork for himself.
+so I can play in square 3, 6, 7 or 8. BUT I shoudnt play in 8 because that would force x to block me and play in 7 which would setup a fork for x.
+
+so our strategy is to first find all the squares I can move into from my winning combination (so first find all my fork triplets).  
+We keep the two numbers of the triple that we've already selected. We also select the opponent's possible pivots from among all the triples. If one of our two possible moves is a potential pivot for the opponent, that's the one we should move into, to block the fork. 
+If not, I will just move in the second free square (arbitrarily). 
+
+If both of the squares are pivots for the opponents like in this case(this is the only possible case btw),
+
+   x | _ | _
+   _ | o | _
+   _ | _ | x
+
+If we chose the triple 3o7, then either move will force the opponent to set up a fork, so that we lose two moves later. Luckily, though, we can instead choose a triple like 2o8. We can move in either of those squares and the game will end up a tie.
+
+In principle, we should analyze a candidate triple to see if both free squares create forks for the opponent. But since we happen to know that this situation arises only on the diagonals, we can be lazier. 
+
+We just list the diagonals last in the procedure find-triples. Since we take the first available triple, this ensures that we won't take a diagonal if there are any other choices.
+
+Functions I made:
+
+best-square-helper: takes opponents pivot numbers and takes one of my fork triplets(only the numbers from it, like takes 36 from 36o) and returns one of either 3 or 6 depending on if its a pivot for the opponent 
+
+best-square: takes one of my fork triplet and me and board_pos and calls the helper
+
+best-move: takes all my fork triplets, checks for opponents pivot number in only the first of those fork-triplets and returns a square I should move too
+
+can-i-offend? takes me and the board_pos. using keep and fork-check-on-triplet-predicate function that gives me all all my fork triplets, applies the best-move function from earlier.
+
+
+
+
+
+
+best-free-square?
+
+I think if all else fails, then we move into a square which will allow me to have the greatest number of winning combinations.
+
+   x | _ | _
+   _ | _ | _
+   _ | _ | _
+
+
+If I am o, then moving into square 5 gives me the greatest number of winning combinations from x23 456 789 147 258 369 159 357. so I will move to 5. If 5 is full, then 3, 7, or 9 will give me the greatest number of winning compbination in second place.
+
+
+
+
+
+game-tied?
+checks if I cant win and opponent cant win and there's one empty square in the board, I call a tie. If all squares are filled, then also I call a tie.
+
+
+
+
+
