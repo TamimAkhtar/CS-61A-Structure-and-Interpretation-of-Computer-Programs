@@ -1,8 +1,0 @@
-#lang simply-scheme
-
-(define (card-val hand)
-  (cond((equal? (bf hand) 'a) 4)
-       ((equal? (bf hand) 'k) 3)
-       ((equal? (bf hand) 'q) 2)
-       ((equal? (bf hand) 'j) 1)
-       (else 0)))

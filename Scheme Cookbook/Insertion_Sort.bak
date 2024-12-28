@@ -1,5 +1,0 @@
-#lang simply-scheme
-
-(define (sort sent)
-  (if (empty? sent) '()
-      (insert (first sent)(sort(bf sent)))))
