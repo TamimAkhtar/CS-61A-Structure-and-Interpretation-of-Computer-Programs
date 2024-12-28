@@ -1,0 +1,167 @@
+Lets represent our board by square numbers ranging from 1-9.
+
+      1 2 3
+      4 5 6
+      7 8 9
+
+We can represent our board position at any given time as a word consisting of 'o' or 'x' or empty: _ _ o _ x o x _ x
+
+so we have a top-level function called 'ttt' which takes in as inputs the board position and also wether the computer is playing an 'o' or 'x' and returns which square number it wants to play:
+so for eg (ttt '__o_xox_x  'o) returns 1 so that means computer wants to play in square 1
+
+Computer's Strategy is as follows (in order of importance):
+1. If I can win, play winning move
+2. If you are winning, play blocking move
+3. If I can win next time, play prepare-to-win move
+4. otherwise play whatever
+
+Do I have a winning move?
+equivalent to do I have three squares in the line such that two of them are mine and the last one is blank?
+so we want to know which squrae is free, so hat we can move in that square to win or block
+
+we have 8 winning combinations btw: 123 456 789 147 258 369 159 357
+
+we can represent these combinations in a single word looking at the board position, so for eg a board position of _ _ o _ x o x _ x will be represented by a sentence of winning combinations in terms of triplets as: _ _ o     _ x o     x _ x    _ _ x   _ x _   o o x   _ x x   o x x 
+
+The triplet function: to use every, my function needs to be a function with one argument but my item function takes 2 arguments so I cant apply it directly.
+ I first convert item into a function with a single argument using lambda and then I use every on it. I also used accumulate to convert the function to a word.
+
+Functions I made:
+
+item: returns the value of the nth square from the board position. returns a number if the square is empty
+
+triplet: takes like a combination 123 and board position and returns me a triplet board position corresponding to the combination
+
+triplet_combinations: takes a board position and returns the board_position in terms of winning combinations 
+
+
+
+
+
+Can I win?
+I need to check if computer can win in the next move. so looking at the triplets, if the computer has 2 squares filled and the third one is empty.
+
+I wan to return the square number if the computer can win and a #false if it cannot win.
+
+first I check how many times the computer's symbol appeared in a triplet using 'appearances'
+
+I then return true if the computer's symbol appeared twice AND the third square is empty in the triplet and return true or false
+
+Fuctions I made:
+
+triplet_check: takes a triplet and checks to see if the computer's symbol appears twice in the triplet and the remaining third square is empty (helper procedure: opponent)
+
+win-check-pred: takes the board position and therefore the whole triplet combination. checks each triplet to see if there is a winning chance. returns true if there is, otherside false
+
+can-i-win? if there is a winning triplet, then return the square number to which the computer can move too, to win. (helper procedure: win-check: returns the number to which computer should move to while can-i-win? returns all the winning triplets that computer has to win) 
+
+
+
+Can Opponent win?
+just reverse can I win? procedure
+
+
+
+
+Can I fork?
+
+If the computer cant win and also the opponent cant win, we need to see if the computer can win 2 moves ahead.
+
+Consider:
+
+   x | o | _
+   _ | x | _
+   _ | _ | o
+
+
+
+In this case, my winning combinations are xo3 4x6 78o x47 ox8 36o xxo 3x7. so I can use 4x6 x47 3x7 to put my symbol. if I put it at square 3, it can easily be blocked off in the next turn. but if I put it at 
+square 4 or square 7, I will have 2 combinations that I can win for and if the opponent blocks one of them, I can easily win using the other one.
+
+so lets call 4x6 x47 and 3x7 as fork triplets. Fork triplets are the one's which have my symbol x in them and the other 2 places are empty.
+
+I want to find these fork triplets and then find the common square in them (4 or 7 in this case) so I can make my move in one of these squares. 
+
+Lets call these common 4 or 7 squares as pivots.  If there are no fork triplets, I return false. If there are fork triplets, I return the first pivot.
+
+Functions I made:
+
+fork-check-on-triplet-predicate: procedure that takes a triplet and returns true if it has one of my symbols and 2 other empty squares.
+
+fork-triplets: takes my winning combination and return all the fork triplets
+
+pivot-numbers: returns all the pivot numbers (pivot-checker is a helper procedure: takes just the empty square numbers from the fork-triplets and sees which number has been repeated more than 2 times)
+
+can-i-fork?: returns false if there are no pivot numbers and returns the first pivot number incase there are more than one.
+
+
+
+
+
+
+
+Taking the offensive:
+
+Now it would make sense to block the creation of a fork by the opponent. But what if the opponent has 2 potential forks? It is too late to do anything now.
+
+Instead, we can try to get two in a row in this move so the opponent will be forced to block me instead of making a fork. However we dont want to accidently force the opponent into making a fork as well.
+
+Consider:
+
+   x | o | _
+   _ | x | _
+   _ | _ | o
+
+I am o and I cant win, the opponent also cant win in the next move and I cant fork as well. So I need my 4th offensive strategy here.
+
+so I am o and I can play in any of the squares 3, 6, 7 and 8 to set up myself for 369 or 789. I also know that x's pivots are 4 and 7 and I cant block them both in one move. So what if I played a move so that x will have to block me instead of setting a fork for himself.
+so I can play in square 3, 6, 7 or 8. BUT I shoudnt play in 8 because that would force x to block me and play in 7 which would setup a fork for x.
+
+so our strategy is to first find all the squares I can move into from my winning combination (so first find all my fork triplets).  
+We keep the two numbers of the triple that we've already selected. We also select the opponent's possible pivots from among all the triples. If one of our two possible moves is a potential pivot for the opponent, that's the one we should move into, to block the fork. 
+If not, I will just move in the second free square (arbitrarily). 
+
+If both of the squares are pivots for the opponents like in this case(this is the only possible case btw),
+
+   x | _ | _
+   _ | o | _
+   _ | _ | x
+
+If we chose the triple 3o7, then either move will force the opponent to set up a fork, so that we lose two moves later. Luckily, though, we can instead choose a triple like 2o8. We can move in either of those squares and the game will end up a tie.
+
+In principle, we should analyze a candidate triple to see if both free squares create forks for the opponent. But since we happen to know that this situation arises only on the diagonals, we can be lazier. 
+
+We just list the diagonals last in the procedure find-triples. Since we take the first available triple, this ensures that we won't take a diagonal if there are any other choices.
+
+Functions I made:
+
+best-square-helper: takes opponents pivot numbers and takes one of my fork triplets(only the numbers from it, like takes 36 from 36o) and returns one of either 3 or 6 depending on if its a pivot for the opponent 
+
+best-square: takes one of my fork triplet and me and board_pos and calls the helper
+
+best-move: takes all my fork triplets, checks for opponents pivot number in only the first of those fork-triplets and returns a square I should move too
+
+can-i-offend? takes me and the board_pos. using keep and fork-check-on-triplet-predicate function that gives me all all my fork triplets, applies the best-move function from earlier.
+
+
+
+
+
+
+best-free-square?
+
+I think if all else fails, then we move into a square which will allow me to have the greatest number of winning combinations.
+
+   x | _ | _
+   _ | _ | _
+   _ | _ | _
+
+
+If I am o, then moving into square 5 gives me the greatest number of winning combinations from x23 456 789 147 258 369 159 357. so I will move to 5. If 5 is full, then 3, 7, or 9 will give me the greatest number of winning compbination in second place.
+
+
+
+
+
+game-tied?
+checks if I cant win and opponent cant win and there's one empty square in the board, I call a tie. If all squares are filled, then also I call a tie.
