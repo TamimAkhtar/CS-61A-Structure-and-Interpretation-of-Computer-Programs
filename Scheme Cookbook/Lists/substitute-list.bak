@@ -1,0 +1,9 @@
+#lang simply-scheme
+
+(define (substitute items old-word new-word)
+  (cond((and (null?(cdr(car items))) (equal? (car items) old-word)) (cons new-word (substitute (cdr items) old-word new-word)))
+  
+
+
+
+  
