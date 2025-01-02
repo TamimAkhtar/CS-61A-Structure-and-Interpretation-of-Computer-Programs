@@ -1,0 +1,12 @@
+#lang simply-scheme
+
+;constructing a tree using data abstraction
+
+(define make-tree cons) ;constructor
+
+(define datum car) ;selector
+(define children cdr) ;selector
+
+(define (is-leaf? node)
+  (null? (children node)))
+
