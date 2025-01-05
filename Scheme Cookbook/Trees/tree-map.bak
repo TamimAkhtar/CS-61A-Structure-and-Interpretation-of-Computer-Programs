@@ -1,8 +1,0 @@
-#lang simply-scheme
-
-(define (treemap fn tree)
-  (cons (fn (car tree))
-        (map (lambda (sub-tree) (treemap fn sub-tree))(cdr tree))))
-
-(define (square num)
-  (* num num))
