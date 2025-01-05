@@ -1,0 +1,26 @@
+#lang simply-scheme
+
+;to find an element, we are traversing depth first until we reach the leaves of the subtree,
+; then we move to the next subtree and go depth first auntil we reach its nodes and so on
+
+(define make-tree cons)
+(define datum car)
+(define children cdr)
+
+
+(define (find-place place tree)
+  (if (eq? place (datum tree))
+      (cons (datum tree) '())
+      (let ((try (find-forest place (children tree))))
+        (if (not (null? try))
+            (cons (datum tree) try)
+            '()))))
+
+
+(define (find-forest place forest)
+  (if (null? forest)
+      '()
+      (let ((try (find-place place (car forest))))
+        (if (not (null? try))
+            try
+            (find-forest place (cdr forest))))))

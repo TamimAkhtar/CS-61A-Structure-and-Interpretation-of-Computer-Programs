@@ -1,0 +1,19 @@
+#lang simply-scheme
+
+; For deep lists
+; deep-reverse takes a deep-list and reverses the list and also all the sublists.
+; reverse procedure is the same as before and takes one list as argument and reverses that
+
+(define (reverse lst)
+  (if (empty? (cdr lst)) lst
+      (append (reverse (cdr lst))(list (car lst)))))
+
+(define (deep-reverse deep-lsts)
+  (if (pair? deep-lsts)
+      (map deep-reverse (reverse deep-lsts))
+      deep-lsts))
+
+(define x 
+  (list (list 1 2) (list 3 4)))
+
+

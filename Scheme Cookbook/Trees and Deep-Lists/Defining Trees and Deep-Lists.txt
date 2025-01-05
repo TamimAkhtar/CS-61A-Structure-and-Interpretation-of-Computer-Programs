@@ -1,0 +1,21 @@
+When we constructed the Tree (check construction-Tree.rkt), we defined some common principles to define a Tree.
+A Tree has at least one node, every node has a datum and and nodes can have any number of children.
+
+The straight-forward implementation is:
+(define make-Tree cons) > constructor
+(define datum car) > selector
+(define children cdr) > selector
+
+The selector children is a list of Trees, ie children of a node. These children are themselves Trees. We call them forest, ie a list that contains multiple trees.
+Tree and Forest are 2 different data types. A forest is just a sequence whose elements are trees. We manipulate forests using cons, car, cdr etc but a Tree is not a sequence and should only be manipulated by Tree constructors and selectors.
+
+Example of a Tree data structure:
+
+(1 (2 (3) (4)) (5 (6) (7) (8)) )
+
+For my reference, Trees are the data structures defined above and we created this data structure. (Tree refer to the data structure I defined above while tree refers to all trees which can take different forms for example deep lists can also be represented as trees)
+
+
+deep-lists are data structures with branch nodes having no data essentially, they will look something like this: ( (krix klan) (shen ben) (stook prosang) ), we can still represent them as trees (when we draw them) and apply tree-like code to manipulate them.
+
+
