@@ -1,8 +1,0 @@
-#lang simply-scheme
-
-(define (same-parity tester . others)
-  (define (helper numlist)
-    (cond((null? numlist) nil)
-         ((equal? (even? tester)(even? (car numlist))) (cons (car numlist)(helper (cdr numlist))))
-         (else (helper (cdr numlist)))))
-  (cons tester (helper others)))

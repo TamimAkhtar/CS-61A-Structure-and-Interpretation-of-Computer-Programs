@@ -1,5 +1,0 @@
-#lang simply-scheme
-
-(define (last-pair lst)
-  (if (empty? lst) '()
-      (last-pair (cdr lst))))
