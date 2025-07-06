@@ -1,0 +1,9 @@
+#lang simply-scheme
+
+(define (sumFactors n)
+  (define (helper n init)
+    (cond ((> init (/ n 2)) '())
+          ((= (remainder n init) 0) (se init (helper n (+ n 1))))
+          (else (helper n (+ n 1)))))
+  (helper n 1))
+          
