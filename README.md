@@ -1,9 +1,9 @@
 # CS-61A-Structure-and-Interpretation-of-Computer-Programs
 CS 61A course offered by UC Berkeley in 2011 by Professor Brian Douglas
 
-I decided to do this highly-recommended course to learn programming concepts from the very-basic. I don't want to be one of those people who are familiar with high-level tools without understanding the basics.
-This course allowed me to dive-deep in basic concepts like recursion, iteration, data abstraction, data srtuctures and OOP and understand every line of code that I wrote and its' purpose before I wrote it.
-Since we follow Scheme (a version of LISP) in this course, I created common algorithms and procedures that can be used as a library for if anyone wants to use Scheme.  
-Feel free to let me know if you want me to add anything to the library.
+I decided to do this highly-recommended course to learn programming concepts from the very-basic.
+Every min I spent listening to Professor Brian's lectures, solving the hw and lab questions and reading 'The Wizard Book' covered in the course was worth it. I learned recursion like never before and looked at trees in a completely different non-daunting way (they're just a bunch of lists) and realized how important state change in programming is and why it makes a big difference to how we solve problems.
 
-Scheme Cookbook : Code snippets / Library for Common Scheme Procedures
+This repository contains Scheme methods and programs from hws, labs and lectures that I solved.
+
+Scheme Cookbook : Code snippets / Library for Common Scheme Procedures:
