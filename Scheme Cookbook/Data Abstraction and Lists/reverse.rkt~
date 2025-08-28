@@ -1,0 +1,7 @@
+#lang simply-scheme
+
+;takes a list and reverses all the elements in the list
+
+(define (reverse items)
+  (if (empty? items) '()
+      (append (reverse (cdr items) (list (car items))))))

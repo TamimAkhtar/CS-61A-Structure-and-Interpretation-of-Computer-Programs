@@ -1,0 +1,5 @@
+#lang simply-scheme
+
+(define (map proc items)
+  (if (empty? items) '()
+      (cons (proc (car items)) (map proc (cdr items)))))
